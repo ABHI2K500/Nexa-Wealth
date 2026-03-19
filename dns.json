@@ -1,0 +1,1 @@
+[{"name":"ac-z04ndnh-shard-00-01.8mhve9z.mongodb.net","port":27017,"priority":0,"weight":0,"type":"SRV"},{"name":"ac-z04ndnh-shard-00-00.8mhve9z.mongodb.net","port":27017,"priority":0,"weight":0,"type":"SRV"},{"name":"ac-z04ndnh-shard-00-02.8mhve9z.mongodb.net","port":27017,"priority":0,"weight":0,"type":"SRV"}]

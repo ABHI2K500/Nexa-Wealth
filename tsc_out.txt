@@ -1,0 +1,2 @@
+﻿src/app/analytics/page.tsx(125,24): error TS2304: Cannot find name 'Cell'.
+src/app/page.tsx(225,36): error TS2304: Cannot find name 'cn'.
