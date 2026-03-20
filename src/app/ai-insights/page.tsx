@@ -17,13 +17,13 @@ const initialMessages = [
   {
     id: 2,
     role: "user",
-    content: "Where am I overspending this month?",
+    content: "Please help me with my financial planning",
     time: "10:25 AM",
   },
   {
     id: 3,
     role: "assistant",
-    content: "Based on your recent transactions, you've spent $280 on Entertainment, which is 15% higher than your usual average. I also noticed a recent subscription to Netflix and an Apple Store purchase. Would you like me to help you set a stricter budget for this category?",
+    content: "Sure Please Ask me anything related to your finance, ill help you with that",
     time: "10:25 AM",
   },
 ];
@@ -42,14 +42,15 @@ export default function AIInsights() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inputValue.trim()) return;
+  const handleSend = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!inputValue.trim() || isTyping) return;
 
+    const query = inputValue.trim();
     const newUserMsg = {
       id: messages.length + 1,
       role: "user",
-      content: inputValue,
+      content: query,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
@@ -57,17 +58,36 @@ export default function AIInsights() {
     setInputValue("");
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const newAiMsg = {
-        id: messages.length + 2,
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        // We only send the latest ones or formatted history. For now, sending all.
+        body: JSON.stringify({ messages: [...messages, newUserMsg] }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setMessages((prev) => [...prev, {
+          id: prev.length + 1,
+          role: "assistant",
+          content: data.content,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }]);
+      } else {
+        throw new Error(data.error);
+      }
+    } catch (error) {
+      setMessages((prev) => [...prev, {
+        id: prev.length + 1,
         role: "assistant",
-        content: "I've analyzed that request. Your cash flow looks stable for the upcoming scheduled bills, but try to limit discretionary spending for the next 5 days to reach your monthly goal.",
+        content: "I'm sorry, I'm having trouble connecting to my servers right now.",
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-      setMessages((prev) => [...prev, newAiMsg]);
+      }]);
+    } finally {
       setIsTyping(false);
-    }, 2000);
+    }
   };
 
   return (
@@ -86,7 +106,7 @@ export default function AIInsights() {
       <Card className="flex-1 flex flex-col overflow-hidden relative">
         <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl -ml-20 -mb-20 pointer-events-none" />
-        
+
         <div className="flex-1 overflow-y-auto p-6 hidden-scrollbar flex flex-col gap-6 relative z-10">
           <AnimatePresence initial={false}>
             {messages.map((msg) => (
@@ -102,8 +122,8 @@ export default function AIInsights() {
               >
                 <div className={cn(
                   "w-10 h-10 rounded-full flex items-center justify-center shrink-0 border",
-                  msg.role === "user" 
-                    ? "bg-slate-800 border-slate-700" 
+                  msg.role === "user"
+                    ? "bg-slate-800 border-slate-700"
                     : "bg-blue-500/20 border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.3)]"
                 )}>
                   {msg.role === "user" ? (
@@ -148,7 +168,7 @@ export default function AIInsights() {
           </AnimatePresence>
           <div ref={messagesEndRef} />
         </div>
-        
+
         <div className="p-4 border-t border-white/5 bg-slate-900/40 relative z-10 backdrop-blur-xl">
           <form onSubmit={handleSend} className="flex gap-3 max-w-4xl mx-auto items-center">
             <Input

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function TopNav({ onMenuClick }: { onMenuClick?: () => void }) {
   const { data: session } = useSession();
@@ -16,6 +17,14 @@ export function TopNav({ onMenuClick }: { onMenuClick?: () => void }) {
   }, []);
 
   const firstName = session?.user?.firstName || "Guest";
+  const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchTerm.trim()) {
+      router.push(`/transactions?q=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
 
   return (
     <header className="h-24 px-4 md:px-8 w-full flex items-center justify-between sticky top-0 z-40 glass border-b-0 border-white/5">
@@ -38,7 +47,10 @@ export function TopNav({ onMenuClick }: { onMenuClick?: () => void }) {
           <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
           <input
             type="text"
-            placeholder="Search transactions..."
+            placeholder="Search transactions (Press Enter)"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleSearch}
             className="pl-12 pr-4 py-2.5 w-72 rounded-full bg-slate-900/50 border border-slate-700 focus:border-blue-500/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-white placeholder-slate-500 transition-all glass"
           />
         </div>

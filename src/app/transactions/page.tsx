@@ -10,6 +10,8 @@ import { Plus, Search, Filter, ArrowUpRight, ArrowDownRight, Sparkles } from "lu
 import { useSession } from "next-auth/react";
 import { formatCurrency } from "@/lib/currency";
 import { format, parseISO } from "date-fns";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 interface Transaction {
   _id: string;
@@ -21,10 +23,21 @@ interface Transaction {
 }
 
 export default function Transactions() {
+  return (
+    <Suspense fallback={<div className="flex h-64 items-center justify-center"><Sparkles className="w-8 h-8 text-blue-500 animate-spin" /></div>}>
+      <TransactionsContent />
+    </Suspense>
+  );
+}
+
+function TransactionsContent() {
   const { data: session } = useSession();
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams.get("q") || "";
+  
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(initialQuery);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // New Transaction form
@@ -35,7 +48,7 @@ export default function Transactions() {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [saving, setSaving] = useState(false);
 
-  const country = session?.user?.country || "US";
+  const country = session?.user?.country || "IN";
 
   useEffect(() => {
     fetchData();
@@ -203,7 +216,7 @@ export default function Transactions() {
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-1.5">Amount</label>
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">$</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">₹</span>
               <Input 
                 type="number" 
                 placeholder="0.00" 

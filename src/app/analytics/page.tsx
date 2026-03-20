@@ -25,7 +25,7 @@ export default function Analytics() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const country = session?.user?.country || "US";
+  const country = session?.user?.country || "IN";
 
   useEffect(() => {
     async function fetchData() {

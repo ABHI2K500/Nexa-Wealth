@@ -86,9 +86,16 @@ export function Sidebar({ className }: { className?: string }) {
       <div className="p-4">
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="w-full flex justify-center items-center py-3 bg-white/5 hover:bg-white/10 rounded-xl transition-colors text-slate-400 hover:text-white"
+          className="w-full flex justify-center items-center py-3 bg-white/5 hover:bg-white/10 rounded-xl transition-colors text-slate-400 hover:text-white group border border-white/5"
         >
-          {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+          {isCollapsed ? (
+            <ChevronRight className="w-5 h-5 group-hover:scale-110 transition-transform" />
+          ) : (
+            <div className="flex items-center gap-2">
+              <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+              <span className="text-sm font-semibold tracking-wide">Minimize Mode</span>
+            </div>
+          )}
         </button>
       </div>
     </motion.aside>

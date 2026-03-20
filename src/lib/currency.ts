@@ -1,4 +1,4 @@
-export function formatCurrency(amount: number, countryCode: string = "US"): string {
+export function formatCurrency(amount: number, countryCode: string = "IN"): string {
   const currencyMap: Record<string, string> = {
     US: "USD",
     UK: "GBP",
