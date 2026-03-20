@@ -1,12 +1,13 @@
 "use client";
 
-import { Bell, Search, User, LogOut } from "lucide-react";
+import { Bell, Search, LogOut, Menu } from "lucide-react";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useSession, signOut } from "next-auth/react";
+import Link from "next/link";
 
-export function TopNav() {
+export function TopNav({ onMenuClick }: { onMenuClick?: () => void }) {
   const { data: session } = useSession();
   const [mounted, setMounted] = useState(false);
 
@@ -17,17 +18,22 @@ export function TopNav() {
   const firstName = session?.user?.firstName || "Guest";
 
   return (
-    <header className="h-24 px-8 w-full flex items-center justify-between sticky top-0 z-40 glass border-b-0 border-white/5">
-      <div className="flex flex-col">
-        <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 font-sans tracking-tight">
-          Welcome back, {firstName}
-        </h1>
-        <p className="text-sm text-slate-400 font-medium">
-          {mounted ? format(new Date(), "EEEE, MMMM do, yyyy") : "Loading date..."}
-        </p>
+    <header className="h-24 px-4 md:px-8 w-full flex items-center justify-between sticky top-0 z-40 glass border-b-0 border-white/5">
+      <div className="flex items-center gap-4">
+        <button onClick={onMenuClick} className="md:hidden text-slate-300 hover:text-white transition-colors">
+          <Menu className="w-6 h-6" />
+        </button>
+        <div className="flex flex-col">
+          <h1 className="text-xl md:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 font-sans tracking-tight">
+            Welcome back, {firstName}
+          </h1>
+          <p className="text-xs md:text-sm text-slate-400 font-medium">
+            {mounted ? format(new Date(), "EEEE, MMMM do, yyyy") : "Loading date..."}
+          </p>
+        </div>
       </div>
 
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-3 md:gap-6">
         <div className="relative group hidden md:block">
           <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
           <input
@@ -37,14 +43,16 @@ export function TopNav() {
           />
         </div>
 
-        <motion.button 
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="relative w-11 h-11 flex items-center justify-center rounded-full bg-slate-800/50 border border-slate-700 text-slate-300 hover:text-white transition-colors"
-        >
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-2 right-2.5 w-2 h-2 rounded-full bg-purple-500 shadow-[0_0_8px_#8b5cf6]" />
-        </motion.button>
+        <Link href="/ai-insights">
+          <motion.div 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative w-11 h-11 flex items-center justify-center rounded-full bg-slate-800/50 border border-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
+          >
+            <Bell className="w-5 h-5" />
+            <span className="absolute top-2 right-2.5 w-2 h-2 rounded-full bg-purple-500 shadow-[0_0_8px_#8b5cf6]" />
+          </motion.div>
+        </Link>
 
         <motion.button 
           onClick={() => signOut({ callbackUrl: '/login' })}

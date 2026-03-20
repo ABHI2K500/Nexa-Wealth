@@ -24,7 +24,7 @@ const navItems = [
   { icon: Settings, label: "Settings", href: "/settings" },
 ];
 
-export function Sidebar() {
+export function Sidebar({ className }: { className?: string }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
 
@@ -33,7 +33,7 @@ export function Sidebar() {
       initial={{ width: 280 }}
       animate={{ width: isCollapsed ? 80 : 280 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="h-screen sticky top-0 left-0 flex flex-col glass-panel z-50 overflow-hidden"
+      className={cn("h-screen sticky top-0 left-0 flex flex-col glass-panel z-50 overflow-hidden", className)}
     >
       <div className="p-6 flex items-center justify-between">
         <div className="flex items-center gap-3 overflow-hidden whitespace-nowrap">

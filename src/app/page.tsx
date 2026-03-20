@@ -182,12 +182,12 @@ export default function Dashboard() {
                 <AreaChart data={monthlyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorSpend" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#f43f5e" stopOpacity={0} />
                     </linearGradient>
                     <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <XAxis dataKey="name" stroke="#475569" fontSize={12} tickLine={false} axisLine={false} />
@@ -196,8 +196,8 @@ export default function Dashboard() {
                     contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}
                     itemStyle={{ color: '#fff' }}
                   />
-                  <Area type="monotone" dataKey="income" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorIncome)" />
-                  <Area type="monotone" dataKey="spend" stroke="#8b5cf6" strokeWidth={3} fillOpacity={1} fill="url(#colorSpend)" />
+                  <Area type="monotone" dataKey="income" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorIncome)" />
+                  <Area type="monotone" dataKey="spend" stroke="#f43f5e" strokeWidth={3} fillOpacity={1} fill="url(#colorSpend)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
